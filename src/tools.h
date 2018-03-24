@@ -29,6 +29,12 @@ public:
   */
   MatrixXd CalculateJacobian(const VectorXd& x_state);
 
+  /**
+   * A helper method to convert to -2*pi to 2 * pi range
+   */
+
+  double ConvertToPiRange(double angle);
+
 };
 
 #endif /* TOOLS_H_ */

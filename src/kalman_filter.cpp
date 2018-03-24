@@ -1,4 +1,5 @@
 #include "kalman_filter.h"
+#include "tools.h"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -46,12 +47,14 @@ void KalmanFilter::Update(const VectorXd &z) {
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
   double range = hypot(x_(0), x_(1));
-  double bearing = atan(x_(1) / x_(0));
+  double bearing = atan2(x_(1), x_(0));
+  double range_threshold = fabs(range) < 0.001 ? 0.001 : range;
   double rate = (x_(0) * x_(2) + x_(1) * x_(3)) / range;
 
   VectorXd h = VectorXd(3);
   h << range, bearing, rate;
   VectorXd y = z - h;
+  y[1] = tools.ConvertToPiRange((double) y[1]);
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();

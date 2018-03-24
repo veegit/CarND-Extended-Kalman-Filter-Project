@@ -70,3 +70,14 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 
   return Hj;
 }
+
+double Tools::ConvertToPiRange(double angle) {
+  while ((angle < -1. * M_PI) || (angle > M_PI)) {
+     if (angle < -1. * M_PI) {
+       angle += 2. * M_PI;
+     } else {
+       angle -= 2. * M_PI;
+     }
+   }
+  return angle;
+}

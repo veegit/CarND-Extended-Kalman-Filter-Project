@@ -32,7 +32,6 @@ FusionEKF::FusionEKF() {
         0, 0, 0.09;
 
   /**
-  TODO:
     * Finish initializing the FusionEKF.
     * Set the process and measurement noises
   */
@@ -70,10 +69,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
   if (!is_initialized_) {
     /**
-    TODO:
       * Initialize the state ekf_.x_ with the first measurement.
       * Create the covariance matrix.
-      * Remember: you'll need to convert radar from polar to cartesian coordinates.
+      * convert radar from polar to cartesian coordinates.
     */
     // first measurement
     cout << "EKF: " << endl;
@@ -87,6 +85,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       double range = measurement_pack.raw_measurements_[0];
       double bearing = measurement_pack.raw_measurements_[1];
       double rate = measurement_pack.raw_measurements_[2];
+      bearing = tools.ConvertToPiRange(bearing);
       double px = range * cos(bearing);
       double py = range * sin(bearing);
       double vx = rate * cos(bearing);
@@ -112,7 +111,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 
   /**
-   TODO:
      * Update the state transition matrix F according to the new elapsed time.
       - Time is measured in seconds.
      * Update the process noise covariance matrix.
@@ -134,8 +132,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   //set the process covariance matrix Q
   ekf_.Q_ = MatrixXd(4, 4);
   //set the acceleration noise components
-  double noise_ax = 5;
-  double noise_ay = 5;
+  double noise_ax = 9;
+  double noise_ay = 9;
   ekf_.Q_ <<  dt_4/4*noise_ax, 0, dt_3/2*noise_ax, 0,
      0, dt_4/4*noise_ay, 0, dt_3/2*noise_ay,
      dt_3/2*noise_ax, 0, dt_2*noise_ax, 0,
@@ -148,7 +146,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    ****************************************************************************/
 
   /**
-   TODO:
      * Use the sensor type to perform the update step.
      * Update the state and covariance matrices.
    */
